@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prvky — periodická tabuľka a test</title>
+<meta name="description" content="Interaktívna periodická tabuľka pre chémiu: slovenské a latinské názvy, oxidačné čísla a test s výberom odpovedí.">
+<meta name="theme-color" content="#0b0f17">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hlavicka">
+  <div class="wrap hlavicka-in">
+    <div class="znacka-app">
+      <span class="logo">Pt</span>
+      <span>
+        <strong>Prvky</strong>
+        <small>periodická tabuľka pre chémiu</small>
+      </span>
+    </div>
+    <nav class="prepinac" aria-label="Režim">
+      <button class="prep-tl aktivny" data-rezim="ucenie" type="button">Voľné učenie</button>
+      <button class="prep-tl" data-rezim="test" type="button">Test</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ==================== VOĽNÉ UČENIE ==================== -->
+  <section id="pohlad-ucenie">
+
+    <div class="panel-nastroje">
+      <div class="hladanie">
+        <svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+        <input id="hladanie" type="search" placeholder="Hľadaj prvok — sodík, Natrium, Na, 11…"
+               autocomplete="off" aria-label="Hľadať prvok">
+        <button id="zmazat-hladanie" type="button" aria-label="Zmazať hľadanie" hidden>&times;</button>
+      </div>
+
+      <div class="prepinac maly" aria-label="Zobrazenie">
+        <button class="pohlad-tl aktivny" data-pohlad="tabulka" type="button">Tabuľka</button>
+        <button class="pohlad-tl" data-pohlad="zoznam" type="button">Zoznam</button>
+      </div>
+    </div>
+
+    <div class="kategorie" id="kategorie-filtre" role="group" aria-label="Filtrovať podľa kategórie"></div>
+
+    <p class="pocet" id="pocet-vysledkov" aria-live="polite"></p>
+
+    <div class="tabulka-obal" id="tabulka-obal">
+      <div class="tabulka" id="tabulka"></div>
+    </div>
+
+    <div class="zoznam" id="zoznam" hidden></div>
+  </section>
+
+  <!-- ==================== TEST ==================== -->
+  <section id="pohlad-test" hidden>
+
+    <!-- 1. nastavenie -->
+    <div class="karta test-uvod" id="test-uvod">
+      <h2>Priprav si test</h2>
+      <p class="podnadpis">Otázka, štyri možnosti, jedna správna. Na konci uvidíš, čo si nevedel.</p>
+
+      <label class="pole">
+        <span>Čo chceš precvičovať</span>
+        <select id="test-typ">
+          <option value="znacka-nazov">Značka &rarr; slovenský názov (Fe &rarr; železo)</option>
+          <option value="nazov-znacka">Slovenský názov &rarr; značka (železo &rarr; Fe)</option>
+          <option value="latin-nazov">Latinský názov &rarr; slovenský názov</option>
+          <option value="nazov-latin">Slovenský názov &rarr; latinský názov</option>
+          <option value="oxidacne">Oxidačné číslo prvku</option>
+          <option value="mix">Všetko namiešané</option>
+        </select>
+      </label>
+
+      <label class="pole">
+        <span>Rozsah prvkov</span>
+        <select id="test-rozsah">
+          <option value="20">Prvých 20 (H – Ca)</option>
+          <option value="36" selected>Prvých 36 (H – Kr)</option>
+          <option value="56">Prvých 56 (H – Ba)</option>
+          <option value="118">Všetkých 118</option>
+        </select>
+      </label>
+
+      <label class="pole">
+        <span>Počet otázok</span>
+        <select id="test-pocet">
+          <option value="10" selected>10 otázok</option>
+          <option value="20">20 otázok</option>
+          <option value="30">30 otázok</option>
+        </select>
+      </label>
+
+      <button id="test-start" class="hlavne-tl siroke" type="button">Spustiť test</button>
+      <p class="rekord-riadok" id="test-rekord"></p>
+    </div>
+
+    <!-- 2. otázky -->
+    <div class="karta test-beh" id="test-beh" hidden>
+      <div class="postup">
+        <div class="postup-lista"><span id="postup-vypln"></span></div>
+        <div class="postup-text">
+          <span id="postup-cislo">Otázka 1 z 10</span>
+          <span id="postup-skore">0 správnych</span>
+        </div>
+      </div>
+
+      <p class="zadanie-popis" id="zadanie-popis"></p>
+      <div class="zadanie" id="zadanie"></div>
+
+      <div class="moznosti" id="moznosti"></div>
+
+      <p class="odozva" id="odozva" aria-live="polite"></p>
+
+      <div class="test-akcie">
+        <button id="test-dalej" class="hlavne-tl" type="button" hidden>Ďalšia otázka</button>
+        <button id="test-ukoncit" class="vedlajsie-tl" type="button">Ukončiť test</button>
+      </div>
+    </div>
+
+    <!-- 3. výsledok -->
+    <div class="karta test-vysledok" id="test-vysledok" hidden>
+      <div class="kruh" id="vysledok-kruh"><span id="vysledok-percenta">0 %</span></div>
+      <h2 id="vysledok-nadpis"></h2>
+      <p class="podnadpis" id="vysledok-text"></p>
+
+      <div class="chyby" id="chyby"></div>
+
+      <div class="test-akcie stred">
+        <button id="test-znova" class="hlavne-tl" type="button">Skúsiť znova</button>
+        <button id="test-spat" class="vedlajsie-tl" type="button">Zmeniť nastavenia</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== DETAIL PRVKU ==================== -->
+<div class="prekrytie" id="prekrytie" hidden>
+  <div class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="detail-nazov">
+    <button class="zavriet" id="zavriet" type="button" aria-label="Zavrieť">&times;</button>
+    <div id="detail-obsah"></div>
+  </div>
+</div>
+
+<footer class="wrap">
+  <div id="legenda" class="legenda"></div>
+  <p class="poznamka">Oxidačné čísla sú v rozsahu bežnom pre stredoškolskú chémiu. Zvýraznené je to najčastejšie.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
