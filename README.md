@@ -1,3 +1,3 @@
-# Periodicka-tabulka
+# Periodicka tabulka
 Made for personal use.
 I am a dumbass and i would much rather learn Computer Science than Science as mentioned here...
